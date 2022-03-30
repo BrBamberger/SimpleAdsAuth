@@ -9,6 +9,7 @@ namespace SimpleAdsAuth.Web.Models
     public class HomeIndexViewModel
     {
         public List <Ad> Ads { get; set; }
-        public bool IsAuthenticated { get; set; }
+        
+        
     }
 }

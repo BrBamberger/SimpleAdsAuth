@@ -15,5 +15,6 @@ namespace SimpleAdsAuth.Data
         public string Details { get; set; }
         public int UserId { get; set; }
         public bool BelongsToUser { get; set; }
+        public string Email { get; set; }
     }
 }

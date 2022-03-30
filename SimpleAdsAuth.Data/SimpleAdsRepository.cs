@@ -47,6 +47,7 @@ namespace SimpleAdsAuth.Data
             {
                 return null;
             }
+          
             return new User
             {
                 Id = (int)reader["Id"],
@@ -55,14 +56,14 @@ namespace SimpleAdsAuth.Data
                 Password = (string)reader["Password"]
             };
         }
-
+        
         public void NewAd(Ad ad)
         {
             var connection = new SqlConnection(_connectionString);
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO AdsAuth (Name, UserId, PhoneNumber, Details, DatePosted)
-            VALUES (@Name, @UserId, @PhoneNumber, @Details, GETDATE())";
-            cmd.Parameters.AddWithValue("@Name", ad.Name);
+            cmd.CommandText = @"INSERT INTO AdsAuth (UserId, PhoneNumber, Details, DatePosted)
+            VALUES (@UserId, @PhoneNumber, @Details, GETDATE())";
+            
             cmd.Parameters.AddWithValue("@UserId", ad.UserId);
             cmd.Parameters.AddWithValue("@PhoneNumber", ad.PhoneNumber);
             cmd.Parameters.AddWithValue("@Details", ad.Details);
@@ -74,8 +75,8 @@ namespace SimpleAdsAuth.Data
         {
             var connection = new SqlConnection(_connectionString);
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT a.Id, a.Name, a.PhoneNumber, a.Details, a.DatePosted, u.Id" +
-                "FROM AdsAuth A JOIN Users U On a.UserId = u.Id" +
+            cmd.CommandText = "SELECT a.Id, a.PhoneNumber, a.UserId, a.Details, a.DatePosted, u.Name, u.Id " +
+                "FROM AdsAuth A JOIN Users U On a.UserId = u.Id " +
                 "ORDER BY DATEPOSTED DESC";
             connection.Open();
             var reader = cmd.ExecuteReader();
@@ -84,11 +85,12 @@ namespace SimpleAdsAuth.Data
             {
                 adList.Add(new Ad
                 {
-                    Name = (string)reader["Name"],
+                   
                     UserId = (int)reader["UserId"],
                     PhoneNumber = (string)reader["PhoneNumber"],
                     Details = (string)reader["Details"],
-                    DatePosted = (DateTime)reader["DatePosted"]
+                    DatePosted = (DateTime)reader["DatePosted"],
+                    Name = (string)reader["Name"]
                 });
 
             }
@@ -100,11 +102,12 @@ namespace SimpleAdsAuth.Data
         {
             var connection = new SqlConnection(_connectionString);
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT a.Id, a.Name, a.PhoneNumber, a.Details, a.DatePosted, u.Id " +
-                "FROM AdsAuth a Join Users U " +
-                "ON a.UserId = u.Id" +
-                "WHERE u.Id = @userId" +
-                "ORDER BY DATEPOSTED DESC";
+            cmd.CommandText = "SELECT a.Id, a.PhoneNumber, a.UserId, a.Details, a.DatePosted, u.Name, u.Id" +
+                " FROM AdsAuth a Join Users U" +
+                " ON a.UserId = u.Id" +
+                " WHERE u.Id = @userId" +
+                " ORDER BY DATEPOSTED DESC";
+            cmd.Parameters.AddWithValue("@userId", userId);
             connection.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             var adList = new List<Ad>();
@@ -112,11 +115,11 @@ namespace SimpleAdsAuth.Data
             {
                 adList.Add(new Ad
                 {
-                    Name = (string)reader["Name"],
                     UserId = (int)reader["UserId"],
                     PhoneNumber = (string)reader["PhoneNumber"],
                     Details = (string)reader["Details"],
-                    DatePosted = (DateTime)reader["DatePosted"]
+                    DatePosted = (DateTime)reader["DatePosted"],
+                    Name = (string)reader["Name"]
                 });
 
             }
@@ -128,7 +131,7 @@ namespace SimpleAdsAuth.Data
         {
             var connection = new SqlConnection(_connectionString);
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "DELETE FROM Ads WHERE Id = @Id";
+            cmd.CommandText = "DELETE FROM AdsAuth WHERE Id = @Id";
             cmd.Parameters.AddWithValue("@id", id);
             connection.Open();
             SqlDataReader reader = cmd.ExecuteReader();

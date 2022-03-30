@@ -18,15 +18,26 @@ namespace SimpleAdsAuth.Web.Controllers
         public IActionResult Index()
         {
             var repo = new SimpleAdsRepository(_connectionString);
-            var vm = new HomeIndexViewModel
+            var ads = repo.GetAllAds();
+            if (User.Identity.IsAuthenticated)
             {
-                IsAuthenticated = User.Identity.IsAuthenticated
-            };
-            var user = repo.GetByEmail(User.Identity.Name);
+                var user = repo.GetByEmail(User.Identity.Name);
+                foreach (Ad ad in ads)
+                {
+                    if (ad.UserId == user.Id)
+                    {
+                        ad.BelongsToUser = true;
+                    }
+                    else
+                    {
+                        ad.BelongsToUser = false;
+                    }
+                }
+               
+            }
             
-                vm.Ads = repo.GetAllAds();
-
-
+            var vm = new HomeIndexViewModel();
+            vm.Ads = ads;
             return View(vm);
         }
         public IActionResult NewAd()
@@ -51,19 +62,22 @@ namespace SimpleAdsAuth.Web.Controllers
         public IActionResult MyAccount()
         {
             var repo = new SimpleAdsRepository(_connectionString);
-            var user = repo.GetByEmail(User.Identity.Name);
+            var user = repo.GetByEmail(User.Identity.Name);            
             var vm = new HomeIndexViewModel
             {
                 Ads = repo.GetAllAds(user.Id)
             };
+            
             return View(vm);
         }
         [HttpPost]
-        [Authorize]
-        public IActionResult DeleteAd (int id)
+       
+        public IActionResult DeleteAd ()
         {
             var repo = new SimpleAdsRepository(_connectionString);
-            repo.DeleteAd(id);
+            var user = repo.GetByEmail(User.Identity.Name);
+            
+            repo.DeleteAd(user.Id);
             return Redirect("/");
         }
        
