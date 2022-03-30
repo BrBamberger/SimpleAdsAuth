@@ -8,9 +8,11 @@ namespace SimpleAdsAuth.Data
 {
     public class Ad
     {
-        public String Name { get; set; }
-        public DateTime DateListed { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime DatePosted { get; set; }
         public string PhoneNumber { get; set; }
         public string Details { get; set; }
+        public int UserId { get; set; }
     }
 }

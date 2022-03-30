@@ -18,18 +18,43 @@ namespace SimpleAdsAuth.Web.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult SignUp(User user, string password)
+        {
+            var repo = new SimpleAdsRepository(_connectionString);
+            repo.AddUser(user, password);
+            return Redirect("/");
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
 
         [HttpPost]
         public IActionResult Login (string email, string password)
         {
+            var repo = new SimpleAdsRepository(_connectionString);
+            var user = repo.Login(email, password);
+            if (user == null)
+            {
+                TempData["message"] = "Invalid login!";
+                return RedirectToAction("Login");
+            }
             var claims = new List<Claim>
             {
                 new Claim ("user", email)
             };
+
             HttpContext.SignInAsync(new ClaimsPrincipal(
                 new ClaimsIdentity(claims, "Cookies", "user", "role"))).Wait();
 
-            return Redirect("/home/secret");
+            return Redirect("/home/newad");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync().Wait();
+            return Redirect("/");
         }
     }
 }
