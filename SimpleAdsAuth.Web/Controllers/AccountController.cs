@@ -23,7 +23,7 @@ namespace SimpleAdsAuth.Web.Controllers
         {
             var repo = new SimpleAdsRepository(_connectionString);
             repo.AddUser(user, password);
-            return Redirect("/");
+            return Redirect("/account/login");
         }
         public IActionResult Login()
         {

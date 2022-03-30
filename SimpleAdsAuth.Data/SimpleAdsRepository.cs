@@ -75,7 +75,7 @@ namespace SimpleAdsAuth.Data
             var connection = new SqlConnection(_connectionString);
             var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT a.Id, a.Name, a.PhoneNumber, a.Details, a.DatePosted, u.Id" +
-                "FROM AdsAuth a JOIN Users u On a.UserId = u.Id" +
+                "FROM AdsAuth A JOIN Users U On a.UserId = u.Id" +
                 "ORDER BY DATEPOSTED DESC";
             connection.Open();
             var reader = cmd.ExecuteReader();

@@ -11,7 +11,7 @@
                         <h5>Phone Number: @ad.PhoneNumber</h5>
                         <h3>Details:</h3>
                         <p>@ad.Details</p>
-                @if (User.Identity.IsAuthenticated)
+                @if (ad.BelongsToUser)
                 {
                  <form method="post" action="/home/deletead">
                      <input type="hidden" name="id" value=@ad.Id />
