@@ -18,6 +18,7 @@ namespace SimpleAdsAuth.Web.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult SignUp(User user, string password)
         {

@@ -19,6 +19,7 @@ namespace SimpleAdsAuth.Web.Controllers
         {
             var repo = new SimpleAdsRepository(_connectionString);
             var ads = repo.GetAllAds();
+           
             if (User.Identity.IsAuthenticated)
             {
                 var user = repo.GetByEmail(User.Identity.Name);
@@ -35,20 +36,19 @@ namespace SimpleAdsAuth.Web.Controllers
                 }
                
             }
-            
             var vm = new HomeIndexViewModel();
             vm.Ads = ads;
+
+
+
             return View(vm);
         }
+        [Authorize]
         public IActionResult NewAd()
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return Redirect("/Account/Login");
-            }      
-                return View();
-            
+        {     
+                return View();           
         }
+        [Authorize]
         [HttpPost]
         public IActionResult NewAd(Ad ad)
         {
@@ -70,8 +70,9 @@ namespace SimpleAdsAuth.Web.Controllers
             
             return View(vm);
         }
+
+        [Authorize]
         [HttpPost]
-       
         public IActionResult DeleteAd ()
         {
             var repo = new SimpleAdsRepository(_connectionString);

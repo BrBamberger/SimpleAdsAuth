@@ -10,6 +10,6 @@ namespace SimpleAdsAuth.Web.Models
     {
         public List <Ad> Ads { get; set; }
         
-        
+        public bool CanDelete { get; set; }
     }
 }
